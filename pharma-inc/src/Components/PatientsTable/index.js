@@ -8,46 +8,62 @@ import {
 	Td,
 	TableCaption,
 	TableContainer,
+	Stack,
+	Button,
+	Icon,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+
+import { VscRootFolderOpened } from "react-icons/vsc";
+import { usePatients } from "../../Providers/Patients";
 
 const PatientsTable = () => {
+	const { patientsList } = usePatients();
+	useEffect(() => {
+		console.log(patientsList);
+	}, []);
+
 	return (
-		<TableContainer width={"100%"}>
+		<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
 			<Table variant="simple">
-				<TableCaption>
-					Imperial to metric conversion factors
-				</TableCaption>
-				<Thead>
+				<Thead bgColor={"yellow.500"} h={"70px"}>
 					<Tr>
 						<Th>Name</Th>
 						<Th>Gender</Th>
 						<Th>Birthday</Th>
+						<Th isNumeric>Actions</Th>
 					</Tr>
 				</Thead>
 				<Tbody>
-					<Tr>
-						<Td>inches</Td>
-						<Td>millimetres (mm)</Td>
-						<Td isNumeric>25.4</Td>
-					</Tr>
-					<Tr>
-						<Td>feet</Td>
-						<Td>centimetres (cm)</Td>
-						<Td isNumeric>30.48</Td>
-					</Tr>
-					<Tr>
-						<Td>yards</Td>
-						<Td>metres (m)</Td>
-						<Td isNumeric>0.91444</Td>
-					</Tr>
+					{patientsList &&
+						patientsList.map((patient, index) => {
+							const date = new Date(patient.dob.date);
+							return (
+								<Tr
+									key={patient.login.uuid}
+									bgColor={
+										index % 2 === 0 ? "#FFF" : "gray.50"
+									}
+								>
+									<Td>
+										{patient.name.first + patient.name.last}
+									</Td>
+									<Td>{patient.gender}</Td>
+									<Td>{date.getMonth()}</Td>
+									<Td isNumeric paddingX={0}>
+										<Button
+											rightIcon={<VscRootFolderOpened />}
+											colorScheme="blue"
+											variant="ghost"
+										>
+											Ver mais
+										</Button>
+									</Td>
+								</Tr>
+							);
+						})}
 				</Tbody>
-				<Tfoot>
-					<Tr>
-						<Th>To convert</Th>
-						<Th>into</Th>
-						<Th isNumeric>multiply by</Th>
-					</Tr>
-				</Tfoot>
+				<Tfoot></Tfoot>
 			</Table>
 		</TableContainer>
 	);
