@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Header from "./Layouts/Header";
+import Home from "./Pages/Home";
+import { ChakraProvider } from "@chakra-ui/react";
+import { theme } from "./Styles/theme";
+
+const maxWidth = "6xl";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<ChakraProvider theme={theme}>
+			<Header maxWidth={maxWidth} />
+			<Home maxWidth={maxWidth} />
+		</ChakraProvider>
+	);
 }
 
 export default App;
