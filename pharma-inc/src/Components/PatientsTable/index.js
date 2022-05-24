@@ -11,6 +11,8 @@ import {
 	Stack,
 	Button,
 	Icon,
+	Skeleton,
+	Spinner,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 
@@ -37,26 +39,45 @@ const PatientsTable = () => {
 				<Tbody>
 					{patientsList &&
 						patientsList.map((patient, index) => {
+							// PATIENT INFOS
+
+							const months = [
+								"Jan",
+								"Fev",
+								"Mar",
+								"Abr",
+								"Mai",
+								"Jun",
+								"Jul",
+								"Ago",
+								"Set",
+								"Out",
+								"Nov",
+								"Dez",
+							];
 							const date = new Date(patient.dob.date);
+							const id = patient.login.uuid;
+							const name =
+								patient.name.first + " " + patient.name.last;
+							const birthdayMonth = months[date.getMonth()];
+
 							return (
 								<Tr
-									key={patient.login.uuid}
+									key={id}
 									bgColor={
 										index % 2 === 0 ? "#FFF" : "gray.50"
 									}
 								>
-									<Td>
-										{patient.name.first + patient.name.last}
-									</Td>
+									<Td>{name}</Td>
 									<Td>{patient.gender}</Td>
-									<Td>{date.getMonth()}</Td>
-									<Td isNumeric paddingX={0}>
+									<Td>{birthdayMonth}</Td>
+									<Td isNumeric>
 										<Button
 											rightIcon={<VscRootFolderOpened />}
 											colorScheme="blue"
-											variant="ghost"
+											variant="link"
 										>
-											Ver mais
+											see more
 										</Button>
 									</Td>
 								</Tr>

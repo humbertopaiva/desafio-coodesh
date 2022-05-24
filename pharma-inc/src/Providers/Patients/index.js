@@ -4,29 +4,32 @@ import axios from "axios";
 export const PatientsContext = createContext();
 
 export const PatientsProvider = ({ children }) => {
-	const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(0);
 	const [patientsList, setPatientsList] = useState([]);
+	const [isLoading, setIsLoagind] = useState(true);
 
 	useEffect(() => {
-		const getList = async () => {
-			const response = await axios.get(
-				"https://randomuser.me/api/?page=1&results=10"
-			);
-			const info = response.data.info;
-			const peopleList = response.data.results;
-
-			console.log("INFO", info);
-			console.log("People List", peopleList);
-
-			setCurrentPage(info.page);
-			setPatientsList([...patientsList, ...peopleList]);
-		};
-
-		getList();
+		loadPatients();
 	}, []);
 
+	const loadPatients = async () => {
+		setIsLoagind(true);
+		const response = await axios.get(
+			`https://randomuser.me/api/?page=${
+				currentPage + 1
+			}&results=50&seed=ab`
+		);
+		const info = response.data.info;
+		const peopleList = response.data.results;
+		setCurrentPage(info.page);
+		setPatientsList([...patientsList, ...peopleList]);
+		setIsLoagind(false);
+	};
+
 	return (
-		<PatientsContext.Provider value={{ currentPage, patientsList }}>
+		<PatientsContext.Provider
+			value={{ currentPage, patientsList, loadPatients, isLoading }}
+		>
 			{children}
 		</PatientsContext.Provider>
 	);
