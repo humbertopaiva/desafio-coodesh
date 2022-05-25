@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { RiUserSearchLine } from "react-icons/ri";
 
-const SearchHomeContainer = () => {
+const SearchHomeContainer = ({ handleSearchPatient }) => {
 	return (
 		<Stack direction="column">
 			<Text fontSize="lg" mb={6}>
@@ -29,6 +29,7 @@ const SearchHomeContainer = () => {
 					_focus={{
 						outline: "none",
 					}}
+					onChange={handleSearchPatient}
 				/>
 				<InputRightAddon
 					bgColor={"#FFF"}

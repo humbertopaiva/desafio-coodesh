@@ -1,34 +1,58 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { usePagination } from "../Pagination";
 
 export const PatientsContext = createContext();
 
 export const PatientsProvider = ({ children }) => {
-	const [currentPage, setCurrentPage] = useState(0);
 	const [patientsList, setPatientsList] = useState([]);
-	const [isLoading, setIsLoagind] = useState(true);
+	const [searchPatient, setSearchPatient] = useState("");
 
-	useEffect(() => {
-		loadPatients();
-	}, []);
+	const {
+		isLoading,
+		setIsLoading,
+		currentPage,
+		setCurrentPage,
+		offSet,
+		setOffSet,
+	} = usePagination();
 
-	const loadPatients = async () => {
-		setIsLoagind(true);
+	const changePage = (page) => {
+		const sliceParam = page * 50;
+		if (page < currentPage) {
+			setIsLoading(true);
+			setPatientsList(patientsList.slice(0, sliceParam));
+			setCurrentPage(page);
+			setIsLoading(false);
+			return;
+		} else loadPatients(page);
+	};
+
+	const loadPatients = async (page = currentPage) => {
+		setIsLoading(true);
 		const response = await axios.get(
-			`https://randomuser.me/api/?page=${
-				currentPage + 1
-			}&results=50&seed=ab`
+			`https://randomuser.me/api/?page=${page + 1}&results=50&seed=ab`
 		);
 		const info = response.data.info;
 		const peopleList = response.data.results;
+		const listData = [...patientsList, ...peopleList];
+
 		setCurrentPage(info.page);
-		setPatientsList([...patientsList, ...peopleList]);
-		setIsLoagind(false);
+		setPatientsList(listData);
+		setIsLoading(false);
 	};
 
 	return (
 		<PatientsContext.Provider
-			value={{ currentPage, patientsList, loadPatients, isLoading }}
+			value={{
+				currentPage,
+				patientsList,
+				loadPatients,
+				isLoading,
+				changePage,
+				setSearchPatient,
+				searchPatient,
+			}}
 		>
 			{children}
 		</PatientsContext.Provider>

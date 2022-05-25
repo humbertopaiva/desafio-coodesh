@@ -1,7 +1,12 @@
+import { PaginationProvider } from "./Pagination";
 import { PatientsProvider } from "./Patients";
 
 const Providers = ({ children }) => {
-	return <PatientsProvider>{children}</PatientsProvider>;
+	return (
+		<PaginationProvider>
+			<PatientsProvider>{children}</PatientsProvider>
+		</PaginationProvider>
+	);
 };
 
 export default Providers;
