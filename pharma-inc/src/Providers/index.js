@@ -3,9 +3,9 @@ import { PatientsProvider } from "./Patients";
 
 const Providers = ({ children }) => {
 	return (
-		<PaginationProvider>
-			<PatientsProvider>{children}</PatientsProvider>
-		</PaginationProvider>
+		<PatientsProvider>
+			<PaginationProvider>{children}</PaginationProvider>
+		</PatientsProvider>
 	);
 };
 

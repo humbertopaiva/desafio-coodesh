@@ -6,17 +6,17 @@ import {
 	Tr,
 	Th,
 	Td,
-	TableCaption,
 	TableContainer,
-	Stack,
 	Button,
-	Icon,
-	Skeleton,
-	Spinner,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { VscRootFolderOpened } from "react-icons/vsc";
+import { useParams } from "react-router-dom";
+import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
+import PatientModal from "../Modal";
+import Pagination from "../Pagination";
 
 const formattedPatient = (patient) => {
 	const months = [
@@ -53,7 +53,11 @@ const formattedPatient = (patient) => {
 
 const PatientsTable = () => {
 	const { patientsList, searchPatient } = usePatients();
+	const { changePage, currentPage, setCurrentPage } = usePagination();
+	const params = useParams();
 	const [filteredList, setFilteredList] = useState(patientsList);
+	const { onOpen, onClose, isOpen } = useDisclosure();
+	const [selectedPatient, setSelectedPatient] = useState({});
 
 	useEffect(() => {
 		const newFilteredList = patientsList.filter((patient) => {
@@ -69,94 +73,112 @@ const PatientsTable = () => {
 		if (!searchPatient) setFilteredList(patientsList);
 	}, [searchPatient]);
 
+	useEffect(() => {
+		changePage(params.id);
+	}, [currentPage]);
+
 	return (
-		<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
-			<Table variant="simple">
-				{/* //TABLE HEADER */}
-				<Thead bgColor={"yellow.500"} h={"70px"}>
-					<Tr>
-						<Th>Name</Th>
-						<Th>Gender</Th>
-						<Th>Birthday</Th>
-						<Th>Country</Th>
-						<Th isNumeric>Actions</Th>
-					</Tr>
-				</Thead>
-				{/* //TABLE BODY */}
-				<Tbody>
-					{!searchPatient
-						? patientsList.map((patient, index) => {
-								const {
-									id,
-									name,
-									gender,
-									country,
-									birthdayMonth,
-								} = formattedPatient(patient);
+		<>
+			<Pagination />
+			<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
+				<Table variant="simple">
+					{/* //TABLE HEADER */}
+					<Thead bgColor={"yellow.500"} h={"70px"}>
+						<Tr>
+							<Th>Name</Th>
+							<Th>Gender</Th>
+							<Th>Birthday</Th>
+							<Th>Country</Th>
+							<Th isNumeric>Actions</Th>
+						</Tr>
+					</Thead>
+					{/* //TABLE BODY */}
+					<Tbody>
+						{!searchPatient
+							? patientsList.map((patient, index) => {
+									const {
+										id,
+										name,
+										gender,
+										country,
+										birthdayMonth,
+									} = formattedPatient(patient);
 
-								return (
-									<Tr
-										key={id}
-										bgColor={
-											index % 2 === 0 ? "#FFF" : "gray.50"
-										}
-									>
-										<Td>{name}</Td>
-										<Td>{gender}</Td>
-										<Td>{birthdayMonth}</Td>
-										<Td>{country}</Td>
-										<Td isNumeric>
-											<Button
-												rightIcon={
-													<VscRootFolderOpened />
-												}
-												colorScheme="blue"
-												variant="link"
-											>
-												details
-											</Button>
-										</Td>
-									</Tr>
-								);
-						  })
-						: filteredList.map((patient, index) => {
-								const {
-									id,
-									name,
-									gender,
-									country,
-									birthdayMonth,
-								} = formattedPatient(patient);
+									return (
+										<Tr
+											key={id}
+											bgColor={
+												index % 2 === 0
+													? "#FFF"
+													: "gray.50"
+											}
+										>
+											<Td>{name}</Td>
+											<Td>{gender}</Td>
+											<Td>{birthdayMonth}</Td>
+											<Td>{country}</Td>
+											<Td isNumeric>
+												<Button
+													rightIcon={
+														<VscRootFolderOpened />
+													}
+													colorScheme="blue"
+													variant="link"
+													onClick={() => {
+														setSelectedPatient(
+															patient
+														);
 
-								return (
-									<Tr
-										key={id}
-										bgColor={
-											index % 2 === 0 ? "#FFF" : "gray.50"
-										}
-									>
-										<Td>{name}</Td>
-										<Td>{gender}</Td>
-										<Td>{birthdayMonth}</Td>
-										<Td>{country}</Td>
-										<Td isNumeric>
-											<Button
-												rightIcon={
-													<VscRootFolderOpened />
-												}
-												colorScheme="blue"
-												variant="link"
-											>
-												details
-											</Button>
-										</Td>
-									</Tr>
-								);
-						  })}
-				</Tbody>
-				<Tfoot></Tfoot>
-			</Table>
-		</TableContainer>
+														onOpen();
+													}}
+												>
+													details
+												</Button>
+											</Td>
+										</Tr>
+									);
+							  })
+							: filteredList.map((patient, index) => {
+									const {
+										id,
+										name,
+										gender,
+										country,
+										birthdayMonth,
+									} = formattedPatient(patient);
+
+									return (
+										<Tr
+											key={id}
+											bgColor={
+												index % 2 === 0
+													? "#FFF"
+													: "gray.50"
+											}
+										>
+											<Td>{name}</Td>
+											<Td>{gender}</Td>
+											<Td>{birthdayMonth}</Td>
+											<Td>{country}</Td>
+											<Td isNumeric>
+												<Button
+													rightIcon={
+														<VscRootFolderOpened />
+													}
+													colorScheme="blue"
+													variant="link"
+												>
+													details
+												</Button>
+											</Td>
+										</Tr>
+									);
+							  })}
+					</Tbody>
+					<Tfoot></Tfoot>
+				</Table>
+			</TableContainer>
+		</>
 	);
 };
 
