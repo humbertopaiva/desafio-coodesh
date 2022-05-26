@@ -13,7 +13,7 @@ const global = {
 	styles: {
 		global: {
 			"html, body": {
-				backgroundColor: "gray.100",
+				backgroundColor: "gray.700",
 			},
 		},
 	},

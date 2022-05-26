@@ -12,10 +12,16 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { VscRootFolderOpened } from "react-icons/vsc";
-import { useParams } from "react-router-dom";
+import {
+	Navigate,
+	Outlet,
+	useLocation,
+	useNavigate,
+	useParams,
+} from "react-router-dom";
 import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
-import PatientModal from "../Modal";
+import PatientModal from "../PatientModal";
 import Pagination from "../Pagination";
 
 const formattedPatient = (patient) => {
@@ -52,12 +58,13 @@ const formattedPatient = (patient) => {
 //COMPONENTE
 
 const PatientsTable = () => {
-	const { patientsList, searchPatient } = usePatients();
+	const { patientsList, searchPatient, setSelectedPatient } = usePatients();
 	const { changePage, currentPage, setCurrentPage } = usePagination();
 	const params = useParams();
 	const [filteredList, setFilteredList] = useState(patientsList);
-	const { onOpen, onClose, isOpen } = useDisclosure();
-	const [selectedPatient, setSelectedPatient] = useState({});
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { onOpen } = useDisclosure();
 
 	useEffect(() => {
 		const newFilteredList = patientsList.filter((patient) => {
@@ -79,6 +86,7 @@ const PatientsTable = () => {
 
 	return (
 		<>
+			<Outlet />
 			<Pagination />
 			<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
 				<Table variant="simple">
@@ -129,7 +137,14 @@ const PatientsTable = () => {
 															patient
 														);
 
-														onOpen();
+														console.log(
+															location.pathname,
+															patient
+														);
+
+														navigate(
+															`${location.pathname}/${patient.login.uuid}`
+														);
 													}}
 												>
 													details

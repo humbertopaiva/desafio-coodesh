@@ -7,6 +7,7 @@ export const PatientsContext = createContext();
 export const PatientsProvider = ({ children }) => {
 	const [patientsList, setPatientsList] = useState([]);
 	const [searchPatient, setSearchPatient] = useState("");
+	const [selectedPatient, setSelectedPatient] = useState({});
 
 	return (
 		<PatientsContext.Provider
@@ -15,6 +16,8 @@ export const PatientsProvider = ({ children }) => {
 				setPatientsList,
 				setSearchPatient,
 				searchPatient,
+				selectedPatient,
+				setSelectedPatient,
 			}}
 		>
 			{children}
