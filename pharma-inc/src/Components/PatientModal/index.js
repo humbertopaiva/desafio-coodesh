@@ -24,6 +24,7 @@ import { BiCopyAlt } from "react-icons/bi";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePatients } from "../../Providers/Patients";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const PatientModal = () => {
 	const { selectedPatient } = usePatients();
@@ -126,18 +127,22 @@ const PatientModal = () => {
 									<Text>{selectedPatient.id.value}</Text>
 								</Flex>
 								<Box position={"relative"}>
-									<Button
-										position={"absolute"}
-										right={0}
-										bottom={0}
-										p={2}
-									>
-										<BiCopyAlt />
-									</Button>
 									<Text fontWeight="bold" mr="6px">
 										URL:
 									</Text>
-
+									<CopyToClipboard
+										text={window.location.href}
+										onCopy={() => alert("Copied")}
+									>
+										<Button
+											position={"absolute"}
+											right={0}
+											bottom={0}
+											p={2}
+										>
+											<BiCopyAlt />
+										</Button>
+									</CopyToClipboard>
 									<Editable
 										defaultValue={window.location.href}
 										p={3}
@@ -151,16 +156,7 @@ const PatientModal = () => {
 							</Stack>
 						</ModalBody>
 
-						<ModalFooter>
-							<Button
-								colorScheme="blue"
-								mr={3}
-								onClick={handleCloseModal}
-							>
-								Close
-							</Button>
-							<Button variant="ghost">Secondary Action</Button>
-						</ModalFooter>
+						<ModalFooter></ModalFooter>
 					</ModalContent>
 				</Modal>
 			)}
