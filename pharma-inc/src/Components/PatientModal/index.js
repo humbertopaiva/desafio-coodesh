@@ -30,8 +30,7 @@ import { usePagination } from "../../Providers/Pagination";
 const PatientModal = () => {
 	const { selectedPatient, setSelectedPatient, patientsList } = usePatients();
 	const { isOpen, onClose, onOpen } = useDisclosure();
-	const { changePage, currentPage } = usePagination();
-	const [isByUrl, setIsByUrl] = useState(false);
+
 	const navigate = useNavigate();
 	const location = useLocation();
 	const params = useParams();
@@ -67,14 +66,12 @@ const PatientModal = () => {
 		);
 		if (patient) {
 			setSelectedPatient(patient);
-			setIsByUrl(true);
 			onOpen();
 		}
 	}, [params]);
 
 	return (
 		<>
-			<h1>{params.patientId}</h1>
 			{selectedPatient && (
 				<Modal
 					blockScrollOnMount={false}
@@ -106,7 +103,7 @@ const PatientModal = () => {
 							<Stack>
 								<Flex>
 									<Text fontWeight="bold" mr="6px">
-										Email:{" "}
+										Email:
 									</Text>
 									<Text>{selectedPatient.email}</Text>
 								</Flex>

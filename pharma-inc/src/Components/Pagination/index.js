@@ -1,22 +1,25 @@
 import { Button, Stack } from "@chakra-ui/react";
 import { usePagination } from "../../Providers/Pagination";
 import { Flex, Text, Divider } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Pagination = () => {
-	const { currentPage, changePage, pagination, setCurrentPage } =
-		usePagination();
+	const { currentPage, changePage, pagination } = usePagination();
 	const prev = currentPage - 1;
 	const navigate = useNavigate();
 
 	return (
 		<>
-			<Flex minW={"100%"} justify={"space-between"} mt={12}>
-				<Text fontWeight={"bold"} color="gray.500">
-					Página:
-				</Text>
+			<Flex
+				minW={"100%"}
+				justify={"center"}
+				mt={12}
+				bgColor="gray.100"
+				padding={5}
+				borderRadius={4}
+			>
 				<Stack direction={"row"}>
+					{/* BOTAO PAGINA ANTERIOR */}
 					{prev > 1 && (
 						<Button
 							variant="link"
@@ -28,12 +31,13 @@ const Pagination = () => {
 								navigate(`/pages/${prev}`);
 							}}
 						>
-							Anterior
+							Prev
 						</Button>
 					)}
-					{pagination.map(
-						(page, index, arr) =>
+					{pagination.map((page) => {
+						return (
 							page > 0 && (
+								// BOTAO DO NUMERO DA PAGINA
 								<Button
 									key={page}
 									variant="link"
@@ -52,24 +56,24 @@ const Pagination = () => {
 									{page}
 								</Button>
 							)
-					)}
-					{
-						<Button
-							variant="link"
-							_focus={{
-								outline: "none",
-							}}
-							onClick={() => {
-								changePage(currentPage + 1);
-								navigate(`/pages/${currentPage + 1}`);
-							}}
-						>
-							Próxima
-						</Button>
-					}
+						);
+					})}
+
+					{/* BOTAO PROXIMA PAGINA */}
+					<Button
+						variant="link"
+						_focus={{
+							outline: "none",
+						}}
+						onClick={() => {
+							changePage(currentPage + 1);
+							navigate(`/pages/${currentPage + 1}`);
+						}}
+					>
+						Next {`>`}
+					</Button>
 				</Stack>
 			</Flex>
-			<Divider border={"2px solid gray.200"} mt={3} />
 		</>
 	);
 };

@@ -1,37 +1,28 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { usePatients } from "../Patients";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDisclosure } from "@chakra-ui/react";
 
 export const PaginationContext = createContext();
-
-const defaultIndexArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const totalOfPages = 10;
 
 export const PaginationProvider = ({ children }) => {
-	const { setPatientsList, patientsList, setSelectedPatient } = usePatients();
+	const { setPatientsList, patientsList } = usePatients();
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [pagination, setPagination] = useState([defaultIndexArray]);
-	// const [firstIndex, setFirstIndex] = useState(1);
-	const [lastIndex, setLastIndex] = useState(0);
-	const [prevPagination, setPrevPagination] = useState([]);
-	const { pageIndex } = useParams();
-	const { onOpen } = useDisclosure();
+	const [pagination, setPagination] = useState([]);
 
 	useEffect(() => {
-		const indexArray = Array.from({ length: 10 }).map((_, index) => {
-			const firstIndex = Math.floor(currentPage / 10) * 10;
+		const indexArray = Array.from({ length: totalOfPages }).map(
+			(_, index) => {
+				const firstIndex =
+					Math.floor(currentPage / totalOfPages) * totalOfPages;
+				if (currentPage < totalOfPages) return index + 1;
 
-			console.log(Math.floor(currentPage / 10));
-			if (currentPage < 10) return index + 1;
-
-			return index + firstIndex;
-		});
+				return index + firstIndex;
+			}
+		);
 		setPagination(indexArray);
 	}, [currentPage]);
-
-	// CRIA OS INDICES DO ARRAY DA PAGINACAO
 
 	// CARREGA MAIS USUARIOS NA MESMA LISTA
 
@@ -80,7 +71,6 @@ export const PaginationProvider = ({ children }) => {
 				setIsLoading,
 				currentPage,
 				setCurrentPage,
-
 				changePage,
 				loadMorePatients,
 				pagination,

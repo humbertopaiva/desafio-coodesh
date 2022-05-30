@@ -5,16 +5,17 @@ import {
 	Tfoot,
 	Tr,
 	Th,
-	Td,
 	TableContainer,
-	Button,
+	Heading,
+	Flex,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { VscRootFolderOpened } from "react-icons/vsc";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { ImNotification } from "react-icons/im";
+import { Outlet, useParams } from "react-router-dom";
 import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
 import Pagination from "../Pagination";
+import PatientLabel from "./PatientLabel";
 
 const formattedPatient = (patient) => {
 	const months = [
@@ -50,18 +51,10 @@ const formattedPatient = (patient) => {
 //COMPONENTE
 
 const PatientsTable = () => {
-	const { patientsList, searchPatient, setSelectedPatient, selectedPatient } =
-		usePatients();
+	const { patientsList, searchPatient } = usePatients();
 	const { changePage } = usePagination();
 	const params = useParams();
 	const [filteredList, setFilteredList] = useState(patientsList);
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	const handleClick = (patient) => {
-		setSelectedPatient(patient);
-		navigate(`${location.pathname}/${patient.login.uuid}`);
-	};
 
 	//RENDERIZA A LISTA DE NOMES BUSCADOS
 	useEffect(() => {
@@ -85,103 +78,72 @@ const PatientsTable = () => {
 	return (
 		<>
 			<Pagination />
-			<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
-				<Table variant="simple">
-					{/* //TABLE HEADER */}
-					<Thead bgColor={"yellow.500"} h={"70px"}>
-						<Tr>
-							<Th>Name</Th>
-							<Th>Gender</Th>
-							<Th>Birthday</Th>
-							<Th>Country</Th>
-							<Th isNumeric>Actions</Th>
-						</Tr>
-					</Thead>
-					{/* //TABLE BODY */}
-					<Tbody>
-						{!searchPatient
-							? patientsList.map((patient, index) => {
-									const {
-										id,
-										name,
-										gender,
-										country,
-										birthdayMonth,
-									} = formattedPatient(patient);
+			{searchPatient.length > 0 && filteredList.length === 0 ? (
+				<Flex direction={"column"} align={"center"} m={10}>
+					<ImNotification fontSize={50} />
+					<Heading>Patient not found</Heading>
+				</Flex>
+			) : (
+				<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
+					<Table variant="simple">
+						{/* //TABLE HEADER */}
+						<Thead h={"70px"}>
+							<Tr fontSize={20}>
+								<Th width={"35%"}>Name</Th>
+								<Th>Gender</Th>
+								<Th>Birthday</Th>
+								<Th>Country</Th>
+								<Th isNumeric>Actions</Th>
+							</Tr>
+						</Thead>
+						{/* //TABLE BODY */}
+						<Tbody>
+							{!searchPatient
+								? patientsList.map((patient, index) => {
+										const {
+											id,
+											name,
+											gender,
+											country,
+											birthdayMonth,
+										} = formattedPatient(patient);
 
-									return (
-										<Tr
-											key={id}
-											bgColor={
-												index % 2 === 0
-													? "#FFF"
-													: "gray.50"
-											}
-										>
-											<Td>{name}</Td>
-											<Td>{gender}</Td>
-											<Td>{birthdayMonth}</Td>
-											<Td>{country}</Td>
-											<Td isNumeric>
-												<Button
-													rightIcon={
-														<VscRootFolderOpened />
-													}
-													colorScheme="blue"
-													variant="link"
-													onClick={() => {
-														handleClick(patient);
-													}}
-												>
-													details
-												</Button>
-											</Td>
-										</Tr>
-									);
-							  })
-							: filteredList.map((patient, index) => {
-									const {
-										id,
-										name,
-										gender,
-										country,
-										birthdayMonth,
-									} = formattedPatient(patient);
+										return (
+											<PatientLabel
+												name={name}
+												gender={gender}
+												country={country}
+												birthdayMonth={birthdayMonth}
+												patient={patient}
+												key={id}
+											/>
+										);
+								  })
+								: filteredList.map((patient, index) => {
+										const {
+											id,
+											name,
+											gender,
+											country,
+											birthdayMonth,
+										} = formattedPatient(patient);
 
-									return (
-										<Tr
-											key={id}
-											bgColor={
-												index % 2 === 0
-													? "#FFF"
-													: "gray.50"
-											}
-										>
-											<Td>{name}</Td>
-											<Td>{gender}</Td>
-											<Td>{birthdayMonth}</Td>
-											<Td>{country}</Td>
-											<Td isNumeric>
-												<Button
-													rightIcon={
-														<VscRootFolderOpened />
-													}
-													colorScheme="blue"
-													variant="link"
-													onClick={() => {
-														handleClick(patient);
-													}}
-												>
-													details
-												</Button>
-											</Td>
-										</Tr>
-									);
-							  })}
-					</Tbody>
-					<Tfoot></Tfoot>
-				</Table>
-			</TableContainer>
+										return (
+											<PatientLabel
+												name={name}
+												gender={gender}
+												country={country}
+												birthdayMonth={birthdayMonth}
+												patient={patient}
+												key={id}
+											/>
+										);
+								  })}
+						</Tbody>
+						<Tfoot></Tfoot>
+					</Table>
+				</TableContainer>
+			)}
 			<Outlet />
 		</>
 	);

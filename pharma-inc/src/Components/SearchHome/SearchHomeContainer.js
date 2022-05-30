@@ -17,11 +17,6 @@ const SearchHomeContainer = ({ handleSearchPatient }) => {
 				laboriosam magnam At repellat nihil
 			</Text>
 			<InputGroup size="lg">
-				<InputLeftAddon
-					bgColor={"#FFF"}
-					color="gray.400"
-					children="Searching..."
-				/>
 				<Input
 					borderLeft={"none"}
 					borderRight={"none"}
