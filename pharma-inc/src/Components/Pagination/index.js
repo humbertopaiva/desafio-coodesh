@@ -7,14 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const Pagination = () => {
 	const { currentPage, changePage, pagination, setCurrentPage } =
 		usePagination();
-	const prev = pagination[0];
-	const [current, setCurrent] = useState(1);
-	const params = useParams();
+	const prev = currentPage - 1;
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		setCurrent(currentPage);
-	}, [currentPage]);
 
 	return (
 		<>
@@ -30,29 +24,49 @@ const Pagination = () => {
 								outline: "none",
 							}}
 							onClick={() => {
-								changePage(prev - 1);
-								navigate(`/pages/${prev - 1}`);
+								changePage(prev);
+								navigate(`/pages/${prev}`);
 							}}
 						>
 							Anterior
 						</Button>
 					)}
-					{pagination.map((page, index, arr) => (
+					{pagination.map(
+						(page, index, arr) =>
+							page > 0 && (
+								<Button
+									key={page}
+									variant="link"
+									onClick={() => {
+										changePage(
+											page,
+											navigate(`/pages/${page}`)
+										);
+									}}
+									color={page === currentPage && "orange.400"}
+									width={"50px"}
+									_focus={{
+										outline: "none",
+									}}
+								>
+									{page}
+								</Button>
+							)
+					)}
+					{
 						<Button
-							key={page}
 							variant="link"
-							onClick={() => {
-								changePage(page, navigate(`/pages/${page}`));
-							}}
-							color={page === current && "orange.400"}
-							width={"50px"}
 							_focus={{
 								outline: "none",
 							}}
+							onClick={() => {
+								changePage(currentPage + 1);
+								navigate(`/pages/${currentPage + 1}`);
+							}}
 						>
-							{index !== arr.length - 1 ? page : page + " ..."}
+							Próxima
 						</Button>
-					))}
+					}
 				</Stack>
 			</Flex>
 			<Divider border={"2px solid gray.200"} mt={3} />

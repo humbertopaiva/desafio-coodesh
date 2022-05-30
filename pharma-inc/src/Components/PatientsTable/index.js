@@ -8,20 +8,12 @@ import {
 	Td,
 	TableContainer,
 	Button,
-	useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { VscRootFolderOpened } from "react-icons/vsc";
-import {
-	Navigate,
-	Outlet,
-	useLocation,
-	useNavigate,
-	useParams,
-} from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
-import PatientModal from "../PatientModal";
 import Pagination from "../Pagination";
 
 const formattedPatient = (patient) => {
@@ -58,14 +50,20 @@ const formattedPatient = (patient) => {
 //COMPONENTE
 
 const PatientsTable = () => {
-	const { patientsList, searchPatient, setSelectedPatient } = usePatients();
-	const { changePage, currentPage, setCurrentPage } = usePagination();
+	const { patientsList, searchPatient, setSelectedPatient, selectedPatient } =
+		usePatients();
+	const { changePage } = usePagination();
 	const params = useParams();
 	const [filteredList, setFilteredList] = useState(patientsList);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { onOpen } = useDisclosure();
 
+	const handleClick = (patient) => {
+		setSelectedPatient(patient);
+		navigate(`${location.pathname}/${patient.login.uuid}`);
+	};
+
+	//RENDERIZA A LISTA DE NOMES BUSCADOS
 	useEffect(() => {
 		const newFilteredList = patientsList.filter((patient) => {
 			const { name, country } = formattedPatient(patient);
@@ -81,12 +79,11 @@ const PatientsTable = () => {
 	}, [searchPatient]);
 
 	useEffect(() => {
-		changePage(params.id);
-	}, [currentPage]);
+		params.pageIndex && changePage(params.pageIndex);
+	}, []);
 
 	return (
 		<>
-			<Outlet />
 			<Pagination />
 			<TableContainer width={"100%"} m={"3rem 0"} borderRadius={4}>
 				<Table variant="simple">
@@ -133,18 +130,7 @@ const PatientsTable = () => {
 													colorScheme="blue"
 													variant="link"
 													onClick={() => {
-														setSelectedPatient(
-															patient
-														);
-
-														console.log(
-															location.pathname,
-															patient
-														);
-
-														navigate(
-															`${location.pathname}/${patient.login.uuid}`
-														);
+														handleClick(patient);
 													}}
 												>
 													details
@@ -182,6 +168,9 @@ const PatientsTable = () => {
 													}
 													colorScheme="blue"
 													variant="link"
+													onClick={() => {
+														handleClick(patient);
+													}}
 												>
 													details
 												</Button>
@@ -193,6 +182,7 @@ const PatientsTable = () => {
 					<Tfoot></Tfoot>
 				</Table>
 			</TableContainer>
+			<Outlet />
 		</>
 	);
 };

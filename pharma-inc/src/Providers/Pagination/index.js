@@ -2,29 +2,36 @@ import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { usePatients } from "../Patients";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
 
 export const PaginationContext = createContext();
 
-export const PaginationProvider = ({ children }) => {
-	const { setPatientsList, patientsList } = usePatients();
+const defaultIndexArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+export const PaginationProvider = ({ children }) => {
+	const { setPatientsList, patientsList, setSelectedPatient } = usePatients();
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [pagination, setPagination] = useState([]);
+	const [pagination, setPagination] = useState([defaultIndexArray]);
+	// const [firstIndex, setFirstIndex] = useState(1);
+	const [lastIndex, setLastIndex] = useState(0);
+	const [prevPagination, setPrevPagination] = useState([]);
+	const { pageIndex } = useParams();
+	const { onOpen } = useDisclosure();
 
 	useEffect(() => {
-		const pagesIndex = getIndexArray();
-		if (
-			currentPage + 9 === pagesIndex[9] ||
-			(currentPage === 1 && currentPage)
-		)
-			setPagination(pagesIndex);
+		const indexArray = Array.from({ length: 10 }).map((_, index) => {
+			const firstIndex = Math.floor(currentPage / 10) * 10;
+
+			console.log(Math.floor(currentPage / 10));
+			if (currentPage < 10) return index + 1;
+
+			return index + firstIndex;
+		});
+		setPagination(indexArray);
 	}, [currentPage]);
 
 	// CRIA OS INDICES DO ARRAY DA PAGINACAO
-
-	const getIndexArray = () =>
-		Array.from({ length: 10 }).map((_, index) => index + currentPage);
 
 	// CARREGA MAIS USUARIOS NA MESMA LISTA
 
@@ -47,7 +54,8 @@ export const PaginationProvider = ({ children }) => {
 
 	// TROCA A PAGINA DE USUARIOS
 
-	const changePage = async (page, callback) => {
+	const changePage = async (page, navigate = null) => {
+		console.log("ENTROOOO");
 		setIsLoading(true);
 		try {
 			const response = await axios.get(
@@ -58,9 +66,10 @@ export const PaginationProvider = ({ children }) => {
 			setCurrentPage(info.page);
 			setPatientsList(peopleList);
 			setIsLoading(false);
-			callback();
-		} catch {
-			console.log((err) => err);
+
+			if (navigate) navigate();
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -71,7 +80,7 @@ export const PaginationProvider = ({ children }) => {
 				setIsLoading,
 				currentPage,
 				setCurrentPage,
-				getIndexArray,
+
 				changePage,
 				loadMorePatients,
 				pagination,

@@ -21,25 +21,27 @@ import {
 	IconButton,
 } from "@chakra-ui/react";
 import { BiCopyAlt } from "react-icons/bi";
-import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { usePatients } from "../../Providers/Patients";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { usePagination } from "../../Providers/Pagination";
 
 const PatientModal = () => {
-	const { selectedPatient } = usePatients();
+	const { selectedPatient, setSelectedPatient, patientsList } = usePatients();
 	const { isOpen, onClose, onOpen } = useDisclosure();
+	const { changePage, currentPage } = usePagination();
+	const [isByUrl, setIsByUrl] = useState(false);
 	const navigate = useNavigate();
 	const location = useLocation();
-
-	useEffect(() => {
-		onOpen();
-	}, []);
+	const params = useParams();
 
 	const handleCloseModal = () => {
-		navigate(-1);
 		onClose();
+		navigate(`/pages/${params.pageIndex}`);
 	};
+
+	//JOGAR ESSAS FUNCOES NO PROVIDER PATIENTS
 
 	const getBirthday = () => {
 		const date = new Date(selectedPatient.dob.date);
@@ -57,8 +59,22 @@ const PatientModal = () => {
 		return selectedPatient.name.first + " " + selectedPatient.name.last;
 	};
 
+	//JOGAR ESSAS FUNCOES NO PROVIDER PATIENTS
+
+	useEffect(() => {
+		const patient = patientsList.find(
+			(patient) => patient.login.uuid === params.patientId
+		);
+		if (patient) {
+			setSelectedPatient(patient);
+			setIsByUrl(true);
+			onOpen();
+		}
+	}, [params]);
+
 	return (
 		<>
+			<h1>{params.patientId}</h1>
 			{selectedPatient && (
 				<Modal
 					blockScrollOnMount={false}
@@ -124,7 +140,7 @@ const PatientModal = () => {
 									<Text fontWeight="bold" mr="6px">
 										Id:
 									</Text>
-									<Text>{selectedPatient.id.value}</Text>
+									<Text>{selectedPatient.login.uuid}</Text>
 								</Flex>
 								<Box position={"relative"}>
 									<Text fontWeight="bold" mr="6px">
@@ -137,26 +153,30 @@ const PatientModal = () => {
 										<Button
 											position={"absolute"}
 											right={0}
-											bottom={0}
-											p={2}
+											bottom={4}
+											bgColor="transparent"
+											_hover={{
+												bgColor: "transparent",
+												color: "orange.500",
+											}}
+											_focus={{
+												outline: "none",
+											}}
 										>
 											<BiCopyAlt />
 										</Button>
 									</CopyToClipboard>
-									<Editable
-										defaultValue={window.location.href}
+									<Text
 										p={3}
 										bgColor="gray.100"
 										borderRadius={4}
+										mb={4}
 									>
-										<EditablePreview />
-										<EditableInput />
-									</Editable>
+										{window.location.href}
+									</Text>
 								</Box>
 							</Stack>
 						</ModalBody>
-
-						<ModalFooter></ModalFooter>
 					</ModalContent>
 				</Modal>
 			)}
