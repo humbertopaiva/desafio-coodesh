@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import PatientModal from "../Components/PatientModal";
 import PatientsTable from "../Components/PatientsTable";
 import Home from "../Pages/Home";
 import { usePagination } from "../Providers/Pagination";
 
 const MyRoutes = ({ maxWidth }) => {
-	const { currentPage, changePage } = usePagination();
+	const { changePage, currentPage } = usePagination();
+
 	useEffect(() => {
 		changePage(currentPage);
 	}, []);

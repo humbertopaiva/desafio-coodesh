@@ -1,6 +1,6 @@
 import { Button, Stack } from "@chakra-ui/react";
 import { usePagination } from "../../Providers/Pagination";
-import { Flex, Text, Divider } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const Pagination = () => {

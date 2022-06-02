@@ -2,37 +2,28 @@ import {
 	Avatar,
 	Button,
 	Box,
-	Editable,
-	EditableInput,
-	EditablePreview,
 	Flex,
 	Heading,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Text,
 	Stack,
 	useDisclosure,
-	ButtonGroup,
-	IconButton,
 } from "@chakra-ui/react";
 import { BiCopyAlt } from "react-icons/bi";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePatients } from "../../Providers/Patients";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { usePagination } from "../../Providers/Pagination";
 
 const PatientModal = () => {
 	const { selectedPatient, setSelectedPatient, patientsList } = usePatients();
 	const { isOpen, onClose, onOpen } = useDisclosure();
-
 	const navigate = useNavigate();
-	const location = useLocation();
 	const params = useParams();
 
 	const handleCloseModal = () => {

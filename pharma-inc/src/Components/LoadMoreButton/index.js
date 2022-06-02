@@ -2,7 +2,6 @@ import { Button, Spinner } from "@chakra-ui/react";
 import { AiOutlineReload } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { usePagination } from "../../Providers/Pagination";
-import { usePatients } from "../../Providers/Patients";
 
 const LoadMoreButton = () => {
 	const { loadMorePatients, isLoading, currentPage } = usePagination();
@@ -19,7 +18,7 @@ const LoadMoreButton = () => {
 					loadMorePatients(navigate(`/pages/${currentPage + 1}`));
 				}}
 			>
-				Carregar mais
+				Load more
 			</Button>
 		</>
 	);

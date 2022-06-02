@@ -1,14 +1,9 @@
-import axios from "axios";
 import { useEffect } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import LoadMoreButton from "../../Components/LoadMoreButton";
-import Pagination from "../../Components/Pagination";
-import PatientsTable from "../../Components/PatientsTable";
 import SearchHome from "../../Components/SearchHome";
 import { usePagination } from "../../Providers/Pagination";
-import { usePatients } from "../../Providers/Patients";
 import HomeContainer from "./HomeContainer";
-import { changePage } from "../../Providers/Pagination";
 
 const Home = ({ maxWidth }) => {
 	const navigate = useNavigate();
@@ -22,7 +17,7 @@ const Home = ({ maxWidth }) => {
 		}
 
 		if (params.patientId) {
-			changePage(params.pageIndex, null, params.patientId);
+			changePage(params.pageIndex);
 		}
 	}, []);
 

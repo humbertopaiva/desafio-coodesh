@@ -26,7 +26,7 @@ export const PaginationProvider = ({ children }) => {
 
 	// CARREGA MAIS USUARIOS NA MESMA LISTA
 
-	const loadMorePatients = async (callback) => {
+	const loadMorePatients = async () => {
 		setIsLoading(true);
 		const response = await axios.get(
 			`https://randomuser.me/api/?page=${
@@ -40,27 +40,27 @@ export const PaginationProvider = ({ children }) => {
 		setCurrentPage(info.page);
 		setPatientsList(listData);
 		setIsLoading(false);
-		callback();
 	};
 
 	// TROCA A PAGINA DE USUARIOS
 
-	const changePage = async (page, navigate = null) => {
-		console.log("ENTROOOO");
-		setIsLoading(true);
-		try {
-			const response = await axios.get(
-				`https://randomuser.me/api/?page=${page}&results=50&seed=ab`
-			);
-			const info = response.data.info;
-			const peopleList = response.data.results;
-			setCurrentPage(info.page);
-			setPatientsList(peopleList);
-			setIsLoading(false);
+	const changePage = async (page, navigate) => {
+		if (page !== currentPage) {
+			setIsLoading(true);
+			try {
+				const response = await axios.get(
+					`https://randomuser.me/api/?page=${page}&results=50&seed=ab`
+				);
+				const info = response.data.info;
+				const peopleList = response.data.results;
+				setCurrentPage(info.page);
+				setPatientsList(peopleList);
+				setIsLoading(false);
 
-			if (navigate) navigate();
-		} catch (err) {
-			console.log(err);
+				if (navigate) navigate();
+			} catch (err) {
+				console.log(err);
+			}
 		}
 	};
 

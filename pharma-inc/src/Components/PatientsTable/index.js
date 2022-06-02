@@ -11,65 +11,23 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ImNotification } from "react-icons/im";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
 import Pagination from "../Pagination";
 import PatientLabel from "./PatientLabel";
 
-const formattedPatient = (patient) => {
-	const months = [
-		"Jan",
-		"Fev",
-		"Mar",
-		"Abr",
-		"Mai",
-		"Jun",
-		"Jul",
-		"Ago",
-		"Set",
-		"Out",
-		"Nov",
-		"Dez",
-	];
-	const date = new Date(patient.dob.date);
-	const id = patient.login.uuid;
-	const gender = patient.gender;
-	const name = patient.name.first + " " + patient.name.last;
-	const birthdayMonth = months[date.getMonth()];
-	const country = patient.location.country;
-
-	return {
-		id,
-		name,
-		gender,
-		birthdayMonth,
-		country,
-	};
-};
-
 //COMPONENTE
 
 const PatientsTable = () => {
-	const { patientsList, searchPatient } = usePatients();
+	const { patientsList, searchPatient, formattedPatientInfos, filteredList } =
+		usePatients();
 	const { changePage } = usePagination();
+	const location = useLocation();
 	const params = useParams();
-	const [filteredList, setFilteredList] = useState(patientsList);
+	const [pathname, setPathname] = useState(location.pathname);
 
 	//RENDERIZA A LISTA DE NOMES BUSCADOS
-	useEffect(() => {
-		const newFilteredList = patientsList.filter((patient) => {
-			const { name, country } = formattedPatient(patient);
-			const searchString = searchPatient.toLowerCase();
-			if (
-				name.toLowerCase().includes(searchString) ||
-				country.toLowerCase().includes(searchString)
-			)
-				return patient;
-		});
-		setFilteredList(newFilteredList);
-		if (!searchPatient) setFilteredList(patientsList);
-	}, [searchPatient]);
 
 	useEffect(() => {
 		params.pageIndex && changePage(params.pageIndex);
@@ -96,17 +54,18 @@ const PatientsTable = () => {
 								<Th isNumeric>Actions</Th>
 							</Tr>
 						</Thead>
-						{/* //TABLE BODY */}
+
+						{/* TABLE BODY */}
 						<Tbody>
 							{!searchPatient
-								? patientsList.map((patient, index) => {
+								? patientsList.map((patient) => {
 										const {
 											id,
 											name,
 											gender,
 											country,
 											birthdayMonth,
-										} = formattedPatient(patient);
+										} = formattedPatientInfos(patient);
 
 										return (
 											<PatientLabel
@@ -116,17 +75,22 @@ const PatientsTable = () => {
 												birthdayMonth={birthdayMonth}
 												patient={patient}
 												key={id}
+												pathname={pathname}
 											/>
 										);
 								  })
-								: filteredList.map((patient, index) => {
+								: filteredList.map((patient) => {
 										const {
 											id,
 											name,
 											gender,
 											country,
 											birthdayMonth,
-										} = formattedPatient(patient);
+										} = formattedPatientInfos(patient);
+
+										const locationPath = toString(
+											location.pathname
+										);
 
 										return (
 											<PatientLabel
@@ -136,6 +100,7 @@ const PatientsTable = () => {
 												birthdayMonth={birthdayMonth}
 												patient={patient}
 												key={id}
+												pathname={pathname}
 											/>
 										);
 								  })}
@@ -144,6 +109,8 @@ const PatientsTable = () => {
 					</Table>
 				</TableContainer>
 			)}
+
+			{/* ABRE MODAL COM INFORMACOES PERSONALIZADAS SOBRE O PACIENTE */}
 			<Outlet />
 		</>
 	);

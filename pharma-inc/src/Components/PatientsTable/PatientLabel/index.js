@@ -1,27 +1,24 @@
 import { Tr, Td, Button } from "@chakra-ui/react";
+import { useState } from "react";
 import { VscRootFolderOpened } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
+import { usePagination } from "../../../Providers/Pagination";
 import { usePatients } from "../../../Providers/Patients";
 
-const PatientLabel = ({
-	name,
-	gender,
-	birthdayMonth,
-	country,
-	patient,
-	key,
-}) => {
+const PatientLabel = ({ name, gender, birthdayMonth, country, patient }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { setSelectedPatient } = usePatients();
+	const { currentPage } = usePagination();
+	const [pageUrl, setPageUrl] = useState(currentPage);
 
 	const handleClick = () => {
 		setSelectedPatient(patient);
-		navigate(`${location.pathname}/${patient.login.uuid}`);
+		navigate(`/pages/${pageUrl}/${patient.login.uuid}`);
 	};
+
 	return (
 		<Tr
-			key={key}
 			borderBottom={"1px solid #DCDCDC"}
 			_hover={{
 				bgColor: "gray.100",
