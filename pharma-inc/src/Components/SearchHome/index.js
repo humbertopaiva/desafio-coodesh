@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { usePagination } from "../../Providers/Pagination";
 import { usePatients } from "../../Providers/Patients";
 import SearchHomeContainer from "./SearchHomeContainer";
 
@@ -10,6 +11,7 @@ const SearchHome = () => {
 		searchPatient,
 		formattedPatientInfos,
 	} = usePatients();
+	const { currentPage } = usePagination();
 
 	const handleSearchPatient = (event) => {
 		setSearchPatient(event.target.value);
@@ -23,7 +25,6 @@ const SearchHome = () => {
 				name.toLowerCase().trim().includes(searchString.trim()) ||
 				country.toLowerCase().trim().includes(searchString.trim())
 			) {
-				console.log("Tem");
 				return patient;
 			}
 		});
@@ -32,7 +33,17 @@ const SearchHome = () => {
 		if (!searchPatient) setFilteredList(patientsList);
 	}, [searchPatient]);
 
-	return <SearchHomeContainer handleSearchPatient={handleSearchPatient} />;
+	useEffect(() => {
+		setSearchPatient("");
+		setFilteredList([]);
+	}, [currentPage]);
+
+	return (
+		<SearchHomeContainer
+			handleSearchPatient={handleSearchPatient}
+			searchPatient={searchPatient}
+		/>
+	);
 };
 
 export default SearchHome;

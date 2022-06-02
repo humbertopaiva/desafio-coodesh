@@ -20,20 +20,21 @@ const Pagination = () => {
 			>
 				<Stack direction={"row"}>
 					{/* BOTAO PAGINA ANTERIOR */}
-					{prev > 1 && (
-						<Button
-							variant="link"
-							_focus={{
-								outline: "none",
-							}}
-							onClick={() => {
-								changePage(prev);
-								navigate(`/pages/${prev}`);
-							}}
-						>
-							Prev
-						</Button>
-					)}
+
+					<Button
+						variant="link"
+						_focus={{
+							outline: "none",
+						}}
+						onClick={() => {
+							changePage(prev);
+							navigate(`/pages/${prev}`);
+						}}
+						isDisabled={currentPage === 1}
+					>
+						Prev
+					</Button>
+
 					{pagination.map((page) => {
 						return (
 							page > 0 && (

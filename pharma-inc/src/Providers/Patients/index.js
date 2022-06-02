@@ -6,7 +6,7 @@ export const PatientsProvider = ({ children }) => {
 	const [patientsList, setPatientsList] = useState([]);
 	const [searchPatient, setSearchPatient] = useState("");
 	const [selectedPatient, setSelectedPatient] = useState(null);
-	const [filteredList, setFilteredList] = useState([patientsList]);
+	const [filteredList, setFilteredList] = useState([]);
 
 	const formattedPatientInfos = (patient) => {
 		const months = [
