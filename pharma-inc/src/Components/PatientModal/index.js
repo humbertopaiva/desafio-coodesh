@@ -19,12 +19,14 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePatients } from "../../Providers/Patients";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useToast } from "@chakra-ui/react";
 
 const PatientModal = () => {
 	const { selectedPatient, setSelectedPatient, patientsList } = usePatients();
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const navigate = useNavigate();
 	const params = useParams();
+	const toast = useToast();
 
 	const handleCloseModal = () => {
 		onClose();
@@ -59,6 +61,8 @@ const PatientModal = () => {
 			setSelectedPatient(patient);
 			onOpen();
 		}
+
+		console.log(patient);
 	}, [params]);
 
 	return (
@@ -121,7 +125,12 @@ const PatientModal = () => {
 										Address:
 									</Text>
 									<Text>
-										{selectedPatient.location.street.name}
+										{`
+									${selectedPatient.location.street.name},
+									 ${selectedPatient.location.city} - ${selectedPatient.location.state}.
+									 Number: ${selectedPatient.location.street.number} - Postcode ${selectedPatient.location.postcode}  
+									`}
+										{}
 									</Text>
 								</Flex>
 								<Flex>
@@ -136,7 +145,6 @@ const PatientModal = () => {
 									</Text>
 									<CopyToClipboard
 										text={window.location.href}
-										onCopy={() => alert("Copied")}
 									>
 										<Button
 											position={"absolute"}
@@ -150,6 +158,15 @@ const PatientModal = () => {
 											_focus={{
 												outline: "none",
 											}}
+											onClick={() =>
+												toast({
+													title: "Endereço de URL copiado.",
+													description: "",
+													status: "success",
+													duration: 5000,
+													isClosable: true,
+												})
+											}
 										>
 											<BiCopyAlt />
 										</Button>

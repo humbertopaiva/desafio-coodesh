@@ -4,7 +4,8 @@ import { Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const Pagination = () => {
-	const { currentPage, changePage, pagination } = usePagination();
+	const { currentPage, changePage, pagination, pagesByPagination } =
+		usePagination();
 	const prev = currentPage - 1;
 	const navigate = useNavigate();
 
@@ -36,28 +37,31 @@ const Pagination = () => {
 					</Button>
 
 					{pagination.map((page) => {
-						return (
-							page > 0 && (
-								// BOTAO DO NUMERO DA PAGINA
-								<Button
-									key={page}
-									variant="link"
-									onClick={() => {
-										changePage(
-											page,
-											navigate(`/pages/${page}`)
-										);
-									}}
-									color={page === currentPage && "orange.400"}
-									width={"50px"}
-									_focus={{
-										outline: "none",
-									}}
-								>
-									{page}
-								</Button>
-							)
-						);
+						if (page <= 100)
+							return (
+								page > 0 && (
+									// BOTAO DO NUMERO DA PAGINA
+									<Button
+										key={page}
+										variant="link"
+										onClick={() => {
+											changePage(
+												page,
+												navigate(`/pages/${page}`)
+											);
+										}}
+										color={
+											page === currentPage && "orange.400"
+										}
+										width={"50px"}
+										_focus={{
+											outline: "none",
+										}}
+									>
+										{page}
+									</Button>
+								)
+							);
 					})}
 
 					{/* BOTAO PROXIMA PAGINA */}

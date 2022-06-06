@@ -3,20 +3,21 @@ import axios from "axios";
 import { usePatients } from "../Patients";
 
 export const PaginationContext = createContext();
-const totalOfPages = 10;
 
 export const PaginationProvider = ({ children }) => {
 	const { setPatientsList, patientsList } = usePatients();
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pagination, setPagination] = useState([]);
+	const [pagesByPagination, pagesByPaginationset] = useState(10);
 
 	useEffect(() => {
-		const indexArray = Array.from({ length: totalOfPages }).map(
+		const indexArray = Array.from({ length: pagesByPagination }).map(
 			(_, index) => {
 				const firstIndex =
-					Math.floor(currentPage / totalOfPages) * totalOfPages;
-				if (currentPage < totalOfPages) return index + 1;
+					Math.floor(currentPage / pagesByPagination) *
+					pagesByPagination;
+				if (currentPage < pagesByPagination) return index + 1;
 
 				return index + firstIndex;
 			}
@@ -74,6 +75,7 @@ export const PaginationProvider = ({ children }) => {
 				changePage,
 				loadMorePatients,
 				pagination,
+				pagesByPagination,
 			}}
 		>
 			{children}
