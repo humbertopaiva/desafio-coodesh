@@ -5,7 +5,7 @@ import PatientsTable from "../Components/PatientsTable";
 import Home from "../Pages/Home";
 import { usePagination } from "../Providers/Pagination";
 
-const MyRoutes = ({ maxWidth }) => {
+const MyRoutes = () => {
 	const { changePage, currentPage } = usePagination();
 
 	useEffect(() => {
@@ -14,10 +14,10 @@ const MyRoutes = ({ maxWidth }) => {
 
 	return (
 		<Routes>
-			<Route path="/" element={<Home maxWidth={maxWidth} />}></Route>
-			<Route path="/pages" element={<Home maxWidth={maxWidth} />}>
+			<Route path="/" element={<Home />}></Route>
+			<Route path="/pages" element={<Home />}>
 				<Route path=":pageIndex" element={<PatientsTable />}>
-					<Route path=":patientId" element={<PatientModal />}></Route>
+					<Route path=":patientId" element={<PatientModal />} />
 				</Route>
 			</Route>
 		</Routes>

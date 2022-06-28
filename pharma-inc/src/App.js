@@ -13,10 +13,9 @@ function App() {
 	return (
 		<ChakraProvider theme={theme}>
 			<BrowserRouter>
-				<Header maxWidth={maxWidth} />
-				<MyRoutes maxWidth={maxWidth} />
+				<Header />
+				<MyRoutes />
 			</BrowserRouter>
-			{/* <Home /> */}
 		</ChakraProvider>
 	);
 }
