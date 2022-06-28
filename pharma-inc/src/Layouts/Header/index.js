@@ -1,14 +1,8 @@
-import { Avatar } from "@chakra-ui/react";
-import Logo from "../../Components/Logo";
-import HeaderContainer from "./HeaderContainer";
+import { FullWidthContainer } from "../../Components/FullWidthContainer";
+import { BannerLogo } from "../BannerLogo";
 
-const Header = ({ maxWidth }) => {
-	return (
-		<HeaderContainer maxWidth={maxWidth}>
-			<Logo />
-			<Avatar />
-		</HeaderContainer>
-	);
+const Header = () => {
+	return <BannerLogo />;
 };
 
 export default Header;

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { FullWidthContainer } from "../../Components/FullWidthContainer";
 import LoadMoreButton from "../../Components/LoadMoreButton";
 import SearchHome from "../../Components/SearchHome";
+import Header from "../../Layouts/Header";
 import { usePagination } from "../../Providers/Pagination";
-import HomeContainer from "./HomeContainer";
 
-const Home = ({ maxWidth }) => {
+const Home = () => {
 	const navigate = useNavigate();
 	const params = useParams();
 	const { changePage } = usePagination();
@@ -22,11 +23,11 @@ const Home = ({ maxWidth }) => {
 	}, []);
 
 	return (
-		<HomeContainer maxWidth={maxWidth}>
+		<FullWidthContainer>
 			<SearchHome />
 			<Outlet />
 			<LoadMoreButton />
-		</HomeContainer>
+		</FullWidthContainer>
 	);
 };
 
