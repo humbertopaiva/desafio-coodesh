@@ -34,7 +34,7 @@ O seu objetivo nesse projeto, é trabalhar no desenvolvimento do Front end que c
 Chakra UI / React Icons / Context API
 
 
-### 🚀 Rodando o projeto na sua máquina
+## 🚀 Rodando o projeto na sua máquina
 
 Para instalar o projeto em sua máquina, siga estas etapas:
 
